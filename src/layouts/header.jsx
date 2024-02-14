@@ -4,11 +4,13 @@ import { LuUserSquare } from "react-icons/lu";
 
 
 import { Avatar, Dropdown, Navbar } from 'flowbite-react';
+import { Link, useNavigate } from 'react-router-dom';
 
 export  const Header = () => {
+    const navigate = useNavigate()
     return (
         <nav>
-            <Navbar fluid rounded  className='bg-slate-300 p-5'>
+            <Navbar fluid rounded  className='bg-slate-200 p-3'>
       <Navbar.Brand href="https://flowbite-react.com">
         
         <span className="self-center whitespace-nowrap text-4xl font-bold dark:text-white">Fash</span><span className='text-red-700 bold text-4xl'>.</span>
@@ -21,12 +23,12 @@ export  const Header = () => {
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse className='w-[50vw] text-center' >
-        <Navbar.Link href="#" className='text-[20px]' active>
+        <Link  to={"/home"} onClick={() => navigate("/")} href="#" className='text-[16px]' active>
           Home
-        </Navbar.Link >
-        <Navbar.Link href="#" className='text-[20px]'>Shop</Navbar.Link>
-        <Navbar.Link href="#" className='text-[20px]'>About</Navbar.Link>
-        <Navbar.Link href="#" className='text-[20px]'>Contact</Navbar.Link>
+        </Link >
+        <Link  to={"/shop"} onClick={() => navigate("/shop")} className='text-[16px]'>Shop</Link>
+        <Link  to={"/about"} onClick={() => navigate("/about")} className='text-[16px]'>About</Link>
+        <Link   to={"/contact"} onClick={() => navigate("/contact")} className='text-[16px]'>Contact</Link>
       </Navbar.Collapse>
       <div>
         

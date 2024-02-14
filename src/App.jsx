@@ -5,6 +5,8 @@ import { HomePage } from './pages/Home/home';
 import { About } from './pages/About/about';
 import { Shop } from './pages/Shop/shop';
 import { Contact } from './pages/contact/contact';
+import { Footer } from 'flowbite-react';
+import { Footerr } from './layouts/footer';
 function App() {
   return (
 
@@ -21,6 +23,7 @@ function App() {
 
         </Routes>
         
+        <Footerr/>
 
       </>
   );
