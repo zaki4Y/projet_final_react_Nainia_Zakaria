@@ -7,12 +7,16 @@ import { Shop } from './pages/Shop/shop';
 import { Contact } from './pages/contact/contact';
 import { Footer } from 'flowbite-react';
 import { Footerr } from './layouts/footer';
+import { MyProvider } from './utils/ContextProvider';
+import { Product } from './pages/Product/product';
+
 function App() {
   return (
 
     
 <>
-        <Header />
+<MyProvider>
+  <Header/>
 
         <Routes>
 
@@ -20,10 +24,13 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/product/:name" element={<Product />} />
 
         </Routes>
         
         <Footerr/>
+</MyProvider>
+        
 
       </>
   );

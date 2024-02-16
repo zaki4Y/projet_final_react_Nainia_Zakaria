@@ -26,7 +26,7 @@ import img22 from "../../../assets/img/blog-03.jpg";
 
 import { Card } from "flowbite-react";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export const FirstSection = () => {
   const [Myblog, setMyBlog] = useState([
@@ -57,18 +57,78 @@ export const FirstSection = () => {
 
   return (
     <>
-      <div className="h-56  sm:h-64 xl:h-80 2xl:h-96">
+      <div className="h-[50vh]  sm:h-64 xl:h-80 2xl:h-96">
         <Carousel slide={false}>
-          <div>
-            <img src={img1} alt="..." />
-            <div>
-              <h4>Women Collection 2018</h4>
-              <h1>New Arrivals</h1>
+          <div className="lg:h-[fit-content] h-[90vh] ">
+            <div className="relative lg:h-[fit-content] h-[100%] ">
+              <img src={img1} alt="..." className="h-[100%] "/>
+              <div className="absolute carosel flex flex-col items-center gap-3 text-white">
+                <h4 className="font-bold text-l">Women Collection 2018</h4>
+                <h1 className="font-bold text-6xl">New Arrivals</h1>
+                <button class="btn-53">
+                  <div class="original">Button</div>
+                  <div class="letters">
+                    <span>B</span>
+                    <span>U</span>
+                    <span>T</span>
+                    <span>T</span>
+                    <span>O</span>
+                    <span>N</span>
+                  </div>
+                </button>
+              </div>
             </div>
+
           </div>
 
-          <img src={img2} alt="..." />
-          <img src={img3} alt="..." />
+          <div className="lg:h-[fit-content] h-[90vh] ">
+            <div className="relative lg:h-[fit-content] h-[100%] ">
+              <img src={img2} alt="..." className="h-[100%] "/>
+              <div className="absolute carosel flex flex-col items-center gap-3 text-white">
+                <h4 className="font-bold text-l">Women Collection 2018</h4>
+                <h1 className="font-bold text-6xl">New Arrivals</h1>
+                <button class="btn-53">
+                  <div class="original">Button</div>
+                  <div class="letters">
+                    <span>B</span>
+                    <span>U</span>
+                    <span>T</span>
+                    <span>T</span>
+                    <span>O</span>
+                    <span>N</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <div className="lg:h-[fit-content] h-[90vh] ">
+            <div className="relative lg:h-[fit-content] h-[100%] ">
+              <img src={img3} alt="..." className="h-[100%] "/>
+              <div className="absolute carosel flex flex-col items-center gap-3 text-white">
+                <h4 className="font-bold text-l">Women Collection 2018</h4>
+                <h1 className="font-bold text-6xl">New Arrivals</h1>
+                <button class="btn-53">
+                  <div class="original">Button</div>
+                  <div class="letters">
+                    <span>B</span>
+                    <span>U</span>
+                    <span>T</span>
+                    <span>T</span>
+                    <span>O</span>
+                    <span>N</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+          </div>
+          
+
+          
+
+          
         </Carousel>
       </div>
 

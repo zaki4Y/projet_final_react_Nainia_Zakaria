@@ -13,7 +13,7 @@ export  const Header = () => {
             <Navbar fluid rounded  className='bg-slate-200 p-3'>
       <Navbar.Brand href="https://flowbite-react.com">
         
-        <span className="self-center whitespace-nowrap text-4xl font-bold dark:text-white">Fash</span><span className='text-red-700 bold text-4xl'>.</span>
+        <span className="self-center whitespace-nowrap text-4xl font-bold dark:text-white">Zshop</span><span className='text-red-700 bold text-4xl'>.</span>
       </Navbar.Brand >
       <div className="flex md:order-2">
       <div className='flex   gap-2'>
@@ -23,12 +23,12 @@ export  const Header = () => {
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse className='w-[50vw] text-center' >
-        <Link  to={"/home"} onClick={() => navigate("/")} href="#" className='text-[16px]' active>
+        <Link  to={"/home"} onClick={() => navigate("/")} href="#" className='text-[16px] text-red-500' active>
           Home
         </Link >
-        <Link  to={"/shop"} onClick={() => navigate("/shop")} className='text-[16px]'>Shop</Link>
-        <Link  to={"/about"} onClick={() => navigate("/about")} className='text-[16px]'>About</Link>
-        <Link   to={"/contact"} onClick={() => navigate("/contact")} className='text-[16px]'>Contact</Link>
+        <Link  to={"/shop"} onClick={() => navigate("/shop")} className='text-[16px] hover:text-red-500 '>Shop</Link>
+        <Link  to={"/about"} onClick={() => navigate("/about")} className='text-[16px hover:text-red-500 ]'>About</Link>
+        <Link   to={"/contact"} onClick={() => navigate("/contact")} className='text-[16px] hover:text-red-500 '>Contact</Link>
       </Navbar.Collapse>
       <div>
         
