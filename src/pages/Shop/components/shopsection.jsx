@@ -76,7 +76,7 @@ export const Shopsection = () => {
     },
   ]);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [Myinput, setMyinput] = useState(Mydrises);
@@ -270,8 +270,18 @@ export const Shopsection = () => {
           <div className="flex flex-wrap gap-8  p-3 ">
             {Mydrises.map((element, index) => (
               <div className="flex flex-col gap-2 w-[30%] " key={index}>
-                <img src={element.images} alt="" />
-                <p onClick={() => navigate(`/product/${element.title}`)}  className=" w-[70%] cursor-pointer hover:text-red-500  ">
+                <div className="overflow-hidden">
+                  <img
+                    src={element.images}
+                    alt=""
+                    className="hover:scale-110 transition"
+                  />
+                </div>
+
+                <p
+                  onClick={() => navigate(`/product/${element.title}`)}
+                  className=" w-[70%] cursor-pointer hover:text-red-500  "
+                >
                   {element.title}{" "}
                 </p>
                 <p className="w-[60%] ">{element.price}</p>
