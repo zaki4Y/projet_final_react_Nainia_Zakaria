@@ -11,9 +11,10 @@ export  const Header = () => {
     return (
         <nav>
             <Navbar fluid rounded  className='bg-slate-200 p-3'>
-      <Navbar.Brand href="https://flowbite-react.com">
-        
-        <span className="self-center whitespace-nowrap text-4xl font-bold dark:text-white">Zshop</span><span className='text-red-700 bold text-4xl'>.</span>
+      <Navbar.Brand href="{/home}">
+      
+      
+<Link className="self-center whitespace-nowrap text-4xl font-bold dark:text-white" to={"/home"}  >Zshop</Link><span className='text-red-700 bold text-4xl'>.</span>
       </Navbar.Brand >
       <div className="flex md:order-2">
       <div className='flex   gap-2'>
