@@ -1,0 +1,52 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Font Variables */
+:root {
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Poppins', sans-serif;
+}
+
+/* Heading Styles */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+/* Body Text */
+body {
+  font-family: var(--font-body);
+}
+
+/* Special Classes */
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+/* Product Titles */
+.product-title {
+  font-family: var(--font-heading);
+  font-weight: 600;
+}
+
+/* Price Text */
+.price-text {
+  font-family: var(--font-body);
+  font-weight: 600;
+}
+
+/* Navigation Text */
+.nav-text {
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+
+/* Button Text */
+.btn-text {
+  font-family: var(--font-body);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
