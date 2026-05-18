@@ -1,104 +1,188 @@
-import React from "react";
-import "./contactsection.scss";
-import heading1 from "../../../assets/img/heading-pages-06.jpg";
-import { Label, TextInput } from "flowbite-react";
-import { HiMail } from "react-icons/hi";
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { HiMail, HiPhone, HiLocationMarker, HiClock } from 'react-icons/hi';
+import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn, FaPaperPlane } from 'react-icons/fa';
+import toast from 'react-hot-toast';
 
 export const Contactsection = () => {
+  const [formData, setFormData] = useState({
+    name: '', email: '', phone: '', subject: '', message: '',
+  });
+
+  const handleChange = (e) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+    toast.success('Message sent successfully! We will contact you soon.');
+    setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+  };
+
+  const contactInfo = [
+    { icon: HiMail, title: 'Email', content: 'info@zshop.com', link: 'mailto:info@zshop.com' },
+    { icon: HiPhone, title: 'Phone', content: '+1 (555) 123-4567', link: 'tel:+15551234567' },
+    { icon: HiLocationMarker, title: 'Location', content: '123 Fashion St, Casablanca', link: 'https://maps.google.com' },
+  ];
+
+  const businessHours = [
+    { day: 'Monday - Friday', hours: '9:00 AM - 6:00 PM' },
+    { day: 'Saturday', hours: '10:00 AM - 4:00 PM' },
+    { day: 'Sunday', hours: 'Closed' },
+  ];
+
   return (
-    <>
-      <div className="banner h-[35%] bg-gradient-to-r from-gray-900 to-gray-800 dark:from-black dark:to-gray-900">
-        <p className="text-white text-3xl md:text-4xl lg:text-6xl w-full h-[100%] flex justify-center items-center font-bold">
-          Contact
-        </p>
+    <div className="bg-dark">
+      <div className="relative h-56 md:h-64 bg-dark-secondary flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 noise-overlay" />
+        <div className="relative z-10 text-center">
+          <h1 className="font-compressed text-7xl md:text-8xl lg:text-9xl tracking-wider text-white">Contact</h1>
+          <p className="font-display italic text-muted text-lg mt-2">Get in touch</p>
+        </div>
       </div>
 
-      <div className="w-full p-4 md:p-10 flex flex-col lg:flex-row justify-center items-start gap-8 bg-white dark:bg-gray-900">
-        {/* Map Section */}
-        <div className="w-full lg:w-[45%]">
-          <div className="w-full h-[300px] md:h-[450px] rounded-lg overflow-hidden shadow-lg">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d106376.70261828904!2d-7.586992499999999!3d33.572287499999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xda7cd4778aa113b%3A0xb06c1d84f310fd3!2sCasablanca!5e0!3m2!1sfr!2sma!4v1707922521315!5m2!1sfr!2sma"
-              className="w-full h-full rounded-lg border-0"
-              allowFullScreen=""
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            ></iframe>
-          </div>
-        </div>
-
-        {/* Form Section */}
-        <div className="w-full lg:w-[45%] p-6 flex flex-col gap-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2">
-              Sending us your message
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400">
-              We'd love to hear from you. Please fill out this form.
-            </p>
-          </div>
-
-          <div className="w-full">
-            <TextInput
-              id="username3"
-              placeholder="Your Name"
-              addon="@"
-              required
-              className="w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-            />
-          </div>
-
-          <div className="w-full">
-            <TextInput
-              id="email4"
-              type="email"
-              icon={HiMail}
-              placeholder="name@flowbite.com"
-              required
-              className="w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-            />
-          </div>
-
-          <div className="w-full">
-            <div className="relative">
-              <div className="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none">
-                <svg
-                  className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 19 18"
-                >
-                  <path d="M18 13.446a3.02 3.02 0 0 0-.946-1.985l-1.4-1.4a3.054 3.054 0 0 0-4.218 0l-.7.7a.983.983 0 0 1-1.39 0l-2.1-2.1a.983.983 0 0 1 0-1.389l.7-.7a2.98 2.98 0 0 0 0-4.217l-1.4-1.4a2.824 2.824 0 0 0-4.218 0c-3.619 3.619-3 8.229 1.752 12.979C6.785 16.639 9.45 18 11.912 18a7.175 7.175 0 0 0 5.139-2.325A2.9 2.9 0 0 0 18 13.446Z" />
-                </svg>
-              </div>
-              <input
-                type="text"
-                id="phone-input"
-                aria-describedby="helper-text-explanation"
-                className="w-full ps-10 p-3 rounded-lg border border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-red-500 dark:focus:border-red-500 transition-colors duration-200"
-                pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                placeholder="123-456-7890"
-                required
+      <div className="section-padding py-16">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="space-y-8"
+          >
+            <div className="h-72 md:h-80 overflow-hidden border border-dark-border">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d106376.70261828904!2d-7.586992499999999!3d33.572287499999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xda7cd4778aa113b%3A0xb06c1d84f310fd3!2sCasablanca!5e0!3m2!1sfr!2sma!4v1707922521315!5m2!1sfr!2sma"
+                title="ZSHOP location on Google Maps"
+                className="w-full h-full border-0 grayscale hover:grayscale-0 transition-all duration-700"
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
               />
             </div>
 
-            <textarea
-              id="message"
-              rows={4}
-              className="mt-4 w-full p-3 rounded-lg border border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-red-500 dark:focus:border-red-500 transition-colors duration-200 resize-none"
-              placeholder="Write your thoughts here..."
-            />
-          </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {contactInfo.map((info, i) => (
+                <motion.a
+                  key={i}
+                  href={info.link}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.08 }}
+                  className="bg-dark-card border border-dark-border p-5 group hover:border-accent/30 transition-all duration-300"
+                >
+                  <info.icon className="text-xl text-accent mb-3 group-hover:scale-110 transition-transform duration-300" />
+                  <h3 className="font-body text-xs uppercase tracking-widest text-muted mb-1">{info.title}</h3>
+                  <p className="font-body text-sm text-white">{info.content}</p>
+                </motion.a>
+              ))}
+            </div>
 
-          <button
-            type="button"
-            className="w-full md:w-auto px-6 py-3 bg-black text-white rounded-lg hover:bg-red-600 dark:bg-gray-700 dark:hover:bg-gray-600 transition-all duration-300 transform hover:scale-[1.02] font-medium"
+            <div className="bg-dark-card border border-dark-border p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <HiClock className="text-xl text-accent" />
+                <h3 className="font-body text-sm uppercase tracking-widest text-white">Business Hours</h3>
+              </div>
+              <div className="space-y-2">
+                {businessHours.map((schedule, i) => (
+                  <div key={i} className="flex justify-between font-body text-sm">
+                    <span className="text-muted">{schedule.day}</span>
+                    <span className="text-white">{schedule.hours}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              {[
+                { icon: FaFacebookF, href: '#', label: 'Facebook' },
+                { icon: FaTwitter, href: '#', label: 'Twitter' },
+                { icon: FaInstagram, href: '#', label: 'Instagram' },
+                { icon: FaLinkedinIn, href: '#', label: 'LinkedIn' },
+              ].map((social, i) => (
+                <motion.a
+                  key={i}
+                  href={social.href}
+                  whileHover={{ scale: 1.1, y: -2 }}
+                  aria-label={social.label}
+                  className="w-11 h-11 rounded-full border border-dark-border flex items-center justify-center
+                             text-muted hover:text-accent hover:border-accent transition-all duration-300"
+                >
+                  <social.icon className="text-sm" />
+                </motion.a>
+              ))}
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
           >
-            Send Message
-          </button>
+            <div className="bg-dark-card border border-dark-border p-8 md:p-10">
+              <h2 className="font-compressed text-4xl md:text-5xl tracking-wider text-white mb-2">Send a Message</h2>
+              <p className="font-body text-sm text-muted mb-8">
+                Have a question or feedback? We'd love to hear from you.
+              </p>
+
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <InputField label="Your Name" name="name" value={formData.name} onChange={handleChange} required />
+                  <InputField label="Email Address" name="email" type="email" value={formData.email} onChange={handleChange} required />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <InputField label="Phone Number" name="phone" type="tel" value={formData.phone} onChange={handleChange} placeholder="123-456-7890" />
+                  <InputField label="Subject" name="subject" value={formData.subject} onChange={handleChange} required />
+                </div>
+                <div className="group">
+                  <label className="block font-body text-xs uppercase tracking-widest text-muted mb-2">Message</label>
+                  <textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    rows={5}
+                    required
+                    className="w-full bg-dark border border-dark-border px-4 py-3.5 text-white text-sm
+                               placeholder:text-muted/30 focus:outline-none focus:border-accent transition-all duration-300 resize-none"
+                  />
+                </div>
+
+                <motion.button
+                  type="submit"
+                  className="btn-primary w-full flex items-center justify-center gap-3"
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Send Message
+                  <FaPaperPlane className="text-xs" />
+                </motion.button>
+              </form>
+            </div>
+          </motion.div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
+
+function InputField({ label, name, type = 'text', value, onChange, required = false, placeholder = '' }) {
+  return (
+    <div className="group">
+      <label className="block font-body text-xs uppercase tracking-widest text-muted mb-2">{label}</label>
+      <input
+        type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+        required={required}
+        placeholder={placeholder}
+        className="w-full bg-dark border border-dark-border px-4 py-3.5 text-white text-sm
+                   placeholder:text-muted/30 focus:outline-none focus:border-accent transition-all duration-300
+                   group-hover:border-muted/30"
+      />
+    </div>
+  );
+}

@@ -10,7 +10,7 @@ import img15 from "../assets/img/item-04.jpg";
 export const MyContext = createContext()
 
 export const MyProvider = ({ children }) => {
-    const [Mydrises, setMyDrises] = useState([
+    const [Mydrises] = useState([
         {
           id: 1,
           title: "Boxy T-Shirt with Roll Sleeve Detail",
