@@ -17,6 +17,10 @@
     @apply bg-dark text-white;
   }
 
+  *:focus-visible {
+    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-dark;
+  }
+
   ::selection {
     @apply bg-accent/30 text-white;
   }
@@ -47,14 +51,16 @@
     @apply bg-accent text-white font-body font-semibold uppercase tracking-widest
            px-8 py-4 transition-all duration-300
            hover:bg-accent/90 hover:shadow-lg hover:shadow-accent/25
-           active:scale-[0.97];
+           active:scale-[0.97]
+           disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-accent disabled:hover:shadow-none disabled:active:scale-100;
   }
 
   .btn-outline {
     @apply border-2 border-white text-white font-body font-semibold uppercase tracking-widest
            px-8 py-4 transition-all duration-300
            hover:bg-white hover:text-dark
-           active:scale-[0.97];
+           active:scale-[0.97]
+           disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-white disabled:active:scale-100;
   }
 
   .card-dark {
@@ -110,4 +116,46 @@
 
 .animate-leave {
   animation: leave 0.15s ease-in forwards;
+}
+
+.skip-link {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link:focus {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: auto;
+  height: auto;
+  padding: 16px 24px;
+  margin: 0;
+  clip: auto;
+  white-space: normal;
+  z-index: 9999;
+  background: #dc2626;
+  color: #fff;
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

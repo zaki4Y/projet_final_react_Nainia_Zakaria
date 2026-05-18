@@ -8,20 +8,43 @@ export const AuthPage = () => {
   const navigate = useNavigate();
   const [mode, setMode] = useState('login');
   const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '' });
+  const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
 
-  const update = (field, value) => setForm((f) => ({ ...f, [field]: value }));
+  const update = (field, value) => {
+    setForm((f) => ({ ...f, [field]: value }));
+    if (errors[field]) setErrors((prev) => ({ ...prev, [field]: '' }));
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!form.email || !form.password) return toast.error('Please fill in all fields');
+  const validate = () => {
+    const errs = {};
+    if (!form.email.trim()) errs.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(form.email)) errs.email = 'Invalid email';
+    if (!form.password) errs.password = 'Password is required';
+    else if (form.password.length < 6) errs.password = 'Min 6 characters';
     if (mode === 'register') {
-      if (!form.name) return toast.error('Please enter your name');
-      if (form.password !== form.confirmPassword) return toast.error('Passwords do not match');
+      if (!form.name.trim()) errs.name = 'Name is required';
+      if (form.password !== form.confirmPassword) errs.confirmPassword = 'Passwords do not match';
+    }
+    return errs;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const errs = validate();
+    setErrors(errs);
+    if (Object.keys(errs).length) return;
+    setSubmitting(true);
+    await new Promise((r) => setTimeout(r, 1000));
+    if (mode === 'register') {
       toast.success('Account created! You can now sign in.');
       setMode('login');
+      setForm({ name: '', email: '', password: '', confirmPassword: '' });
+      setSubmitting(false);
       return;
     }
     toast.success('Welcome back!');
+    setSubmitting(false);
     navigate('/home');
   };
 
@@ -89,20 +112,22 @@ export const AuthPage = () => {
                   : 'Create an account to start shopping and save your favorites.'}
               </p>
 
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form onSubmit={handleSubmit} className="space-y-5" noValidate>
                 {mode === 'register' && (
                   <div className="group">
                     <label className="block font-body text-xs uppercase tracking-widest text-muted mb-2">Full Name</label>
                     <div className="relative">
-                      <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-muted/40 text-sm" />
+                      <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-muted/60 text-sm" />
                       <input
                         type="text"
                         value={form.name}
                         onChange={(e) => update('name', e.target.value)}
                         placeholder="John Doe"
-                        className="w-full bg-dark border border-dark-border pl-11 pr-4 py-3.5 text-white text-sm
-                                   placeholder:text-muted/30 focus:outline-none focus:border-accent transition-all"
+                        className={`w-full bg-dark border pl-11 pr-4 py-3.5 text-white text-sm
+                                   placeholder:text-muted/50 transition-all
+                                   ${errors.name ? 'border-accent' : 'border-dark-border'}`}
                       />
+                      {errors.name && <p className="text-accent text-xs mt-1 font-body">{errors.name}</p>}
                     </div>
                   </div>
                 )}
@@ -110,30 +135,34 @@ export const AuthPage = () => {
                 <div className="group">
                   <label className="block font-body text-xs uppercase tracking-widest text-muted mb-2">Email Address</label>
                   <div className="relative">
-                    <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-muted/40 text-sm" />
+                    <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-muted/60 text-sm" />
                     <input
                       type="email"
                       value={form.email}
                       onChange={(e) => update('email', e.target.value)}
                       placeholder="you@example.com"
-                      className="w-full bg-dark border border-dark-border pl-11 pr-4 py-3.5 text-white text-sm
-                                 placeholder:text-muted/30 focus:outline-none focus:border-accent transition-all"
+                      className={`w-full bg-dark border pl-11 pr-4 py-3.5 text-white text-sm
+                                 placeholder:text-muted/50 transition-all
+                                 ${errors.email ? 'border-accent' : 'border-dark-border'}`}
                     />
+                    {errors.email && <p className="text-accent text-xs mt-1 font-body">{errors.email}</p>}
                   </div>
                 </div>
 
                 <div className="group">
                   <label className="block font-body text-xs uppercase tracking-widest text-muted mb-2">Password</label>
                   <div className="relative">
-                    <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-muted/40 text-sm" />
+                    <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-muted/60 text-sm" />
                     <input
                       type="password"
                       value={form.password}
                       onChange={(e) => update('password', e.target.value)}
                       placeholder="••••••••"
-                      className="w-full bg-dark border border-dark-border pl-11 pr-4 py-3.5 text-white text-sm
-                                 placeholder:text-muted/30 focus:outline-none focus:border-accent transition-all"
+                      className={`w-full bg-dark border pl-11 pr-4 py-3.5 text-white text-sm
+                                 placeholder:text-muted/50 transition-all
+                                 ${errors.password ? 'border-accent' : 'border-dark-border'}`}
                     />
+                    {errors.password && <p className="text-accent text-xs mt-1 font-body">{errors.password}</p>}
                   </div>
                 </div>
 
@@ -141,26 +170,36 @@ export const AuthPage = () => {
                   <div className="group">
                     <label className="block font-body text-xs uppercase tracking-widest text-muted mb-2">Confirm Password</label>
                     <div className="relative">
-                      <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-muted/40 text-sm" />
+                      <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-muted/60 text-sm" />
                       <input
                         type="password"
                         value={form.confirmPassword}
                         onChange={(e) => update('confirmPassword', e.target.value)}
                         placeholder="••••••••"
-                        className="w-full bg-dark border border-dark-border pl-11 pr-4 py-3.5 text-white text-sm
-                                   placeholder:text-muted/30 focus:outline-none focus:border-accent transition-all"
+                        className={`w-full bg-dark border pl-11 pr-4 py-3.5 text-white text-sm
+                                   placeholder:text-muted/50 transition-all
+                                   ${errors.confirmPassword ? 'border-accent' : 'border-dark-border'}`}
                       />
+                      {errors.confirmPassword && <p className="text-accent text-xs mt-1 font-body">{errors.confirmPassword}</p>}
                     </div>
                   </div>
                 )}
 
                 <motion.button
                   type="submit"
+                  disabled={submitting}
                   className="btn-primary w-full mt-2"
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
+                  whileHover={submitting ? {} : { scale: 1.01 }}
+                  whileTap={submitting ? {} : { scale: 0.99 }}
                 >
-                  {mode === 'login' ? 'Sign In' : 'Create Account'}
+                  {submitting ? (
+                    <span className="flex items-center justify-center gap-3">
+                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      {mode === 'login' ? 'Signing In...' : 'Creating Account...'}
+                    </span>
+                  ) : (
+                    mode === 'login' ? 'Sign In' : 'Create Account'
+                  )}
                 </motion.button>
               </form>
 

@@ -29,9 +29,9 @@ export const Cart = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center max-w-md"
         >
-          <HiOutlineShoppingBag className="text-6xl text-muted/30 mx-auto mb-6" />
-          <h2 className="font-display italic text-2xl text-muted mb-3">Your cart is empty</h2>
-          <p className="font-body text-sm text-muted/60 mb-8">Looks like you haven't added anything yet.</p>
+          <HiOutlineShoppingBag className="text-6xl text-muted/60 mx-auto mb-6" />
+          <h1 className="font-display italic text-2xl text-muted mb-3">Your cart is empty</h1>
+          <p className="font-body text-sm text-muted mb-8">Looks like you haven't added anything yet.</p>
           <motion.button
             onClick={() => navigate('/shop')}
             className="btn-primary"
@@ -89,12 +89,12 @@ export const Cart = () => {
                     <div className="flex-1 min-w-0">
                       <div className="flex justify-between items-start gap-4">
                         <div>
-                          <h3
+                          <h2
                             className="font-body text-white text-sm md:text-base font-medium truncate cursor-pointer hover:text-accent transition-colors"
                             onClick={() => navigate(`/shop/${item.id}`)}
                           >
                             {item.title}
-                          </h3>
+                          </h2>
                           {item.size && (
                             <span className="inline-block mt-1 px-2 py-0.5 bg-dark-border text-muted text-[10px] uppercase tracking-wider font-body">
                               Size: {item.size}
@@ -103,7 +103,7 @@ export const Cart = () => {
                         </div>
                         <button
                           onClick={() => removeFromCart(item.id)}
-                          className="text-muted/40 hover:text-accent transition-colors shrink-0"
+                          className="text-muted/60 hover:text-accent transition-colors shrink-0"
                           aria-label={`Remove ${item.title} from cart`}
                         >
                           <IoClose className="text-lg" />
@@ -139,7 +139,7 @@ export const Cart = () => {
 
           <div className="lg:col-span-1">
             <div className="bg-dark-card border border-dark-border p-6 lg:sticky lg:top-28">
-              <h3 className="font-compressed text-2xl tracking-wider text-white mb-6">Order Summary</h3>
+              <h2 className="font-compressed text-2xl tracking-wider text-white mb-6">Order Summary</h2>
 
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between font-body text-sm">

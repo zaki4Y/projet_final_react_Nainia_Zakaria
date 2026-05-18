@@ -8,15 +8,19 @@ import { MyContext } from '../../../utils/ContextProvider';
 export const ProductDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { addToCart } = useContext(MyContext);
+  const { addToCart, toggleWishlist, isInWishlist } = useContext(MyContext);
 
   const [selectedSize, setSelectedSize] = useState('M');
   const [quantity, setQuantity] = useState(1);
-  const [isWishlist, setIsWishlist] = useState(false);
   const [selectedImage, setSelectedImage] = useState(0);
   const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
+  const [wishlistId, setWishlistId] = useState(null);
 
   const productData = location.state;
+
+  useEffect(() => {
+    if (productData) setWishlistId(productData.id);
+  }, [productData]);
 
   useEffect(() => {
     if (!productData) {
@@ -30,7 +34,7 @@ export const ProductDetails = () => {
       <div className="min-h-screen bg-dark flex items-center justify-center pt-20">
         <div className="text-center">
           <p className="font-display italic text-2xl text-muted mb-4">Product Not Found</p>
-          <p className="font-body text-sm text-muted/60">Redirecting to shop...</p>
+          <p className="font-body text-sm text-muted">Redirecting to shop...</p>
         </div>
       </div>
     );
@@ -53,6 +57,11 @@ export const ProductDetails = () => {
   const handleQuantityChange = (change) => {
     const n = quantity + change;
     if (n >= 1 && n <= product.stock) setQuantity(n);
+  };
+
+  const handleToggleWishlist = () => {
+    toggleWishlist({ id: productData.id, title: productData.title, price: productData.price, images: Array.isArray(productData.images) ? productData.images[0] : productData.images });
+    toast.success(isInWishlist(productData.id) ? 'Removed from Wishlist' : 'Added to Wishlist');
   };
 
   const handleAddToCart = () => {
@@ -92,9 +101,9 @@ export const ProductDetails = () => {
       <div className="section-padding py-6">
         <div className="flex items-center gap-3 text-sm">
           <button onClick={() => navigate('/')} className="font-body text-muted hover:text-white transition-colors">Home</button>
-          <span className="text-muted/30">/</span>
+          <span className="text-dark-border">/</span>
           <button onClick={() => navigate('/shop')} className="font-body text-muted hover:text-white transition-colors">Shop</button>
-          <span className="text-muted/30">/</span>
+          <span className="text-dark-border">/</span>
           <span className="font-body text-accent">{product.title}</span>
         </div>
       </div>
@@ -227,15 +236,15 @@ export const ProductDetails = () => {
                   Add to Cart
                 </motion.button>
                 <motion.button
-                  onClick={() => setIsWishlist(!isWishlist)}
+                  onClick={handleToggleWishlist}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  aria-label={isWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+                  aria-label={wishlistId && isInWishlist(wishlistId) ? 'Remove from wishlist' : 'Add to wishlist'}
                   className={`w-14 h-14 flex items-center justify-center border transition-all duration-300 ${
-                    isWishlist ? 'bg-accent/10 border-accent text-accent' : 'border-dark-border text-muted hover:border-muted/30 hover:text-white'
+                    wishlistId && isInWishlist(wishlistId) ? 'bg-accent/10 border-accent text-accent' : 'border-dark-border text-muted hover:border-muted/30 hover:text-white'
                   }`}
                 >
-                  <FaHeart className={`text-lg ${isWishlist ? 'fill-current' : ''}`} />
+                  <FaHeart className={`text-lg ${wishlistId && isInWishlist(wishlistId) ? 'fill-current' : ''}`} />
                 </motion.button>
                 <motion.button
                   onClick={() => {
@@ -253,12 +262,12 @@ export const ProductDetails = () => {
 
               <div className="border-t border-dark-border pt-8 space-y-6">
                 <div>
-                  <h3 className="font-display text-xl text-white mb-4">Description</h3>
+                  <h2 className="font-display text-xl text-white mb-4">Description</h2>
                   <p className="font-body text-sm text-muted leading-relaxed">{product.description}</p>
                 </div>
 
                 <div>
-                  <h3 className="font-display text-xl text-white mb-4">Features</h3>
+                  <h2 className="font-display text-xl text-white mb-4">Features</h2>
                   <div className="grid grid-cols-2 gap-y-2 gap-x-4">
                     {product.features.map((feature, i) => (
                       <motion.li

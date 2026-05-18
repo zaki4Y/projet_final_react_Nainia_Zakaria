@@ -15,6 +15,8 @@ export const Checkout = () => {
     email: '', firstName: '', lastName: '', address: '', city: '',
     zipCode: '', country: 'United States', cardNumber: '', expDate: '', cvv: '',
   });
+  const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
 
   const subtotal = cart.reduce((t, i) => {
     return t + parseFloat(i.price.replace('$', '')) * i.quantity;
@@ -22,21 +24,45 @@ export const Checkout = () => {
   const shipping = subtotal > 100 ? 0 : 9.99;
   const total = subtotal + shipping;
 
-  const update = (field, value) => setForm((f) => ({ ...f, [field]: value }));
+  const update = (field, value) => {
+    setForm((f) => ({ ...f, [field]: value }));
+    if (errors[field]) setErrors((prev) => ({ ...prev, [field]: '' }));
+  };
+
+  const validateStep = (s) => {
+    const errs = {};
+    if (s === 0) {
+      if (!form.firstName.trim()) errs.firstName = 'Required';
+      if (!form.lastName.trim()) errs.lastName = 'Required';
+      if (!form.email.trim()) errs.email = 'Required';
+      else if (!/\S+@\S+\.\S+/.test(form.email)) errs.email = 'Invalid email';
+      if (!form.address.trim()) errs.address = 'Required';
+    }
+    if (s === 2) {
+      if (!form.cardNumber.trim()) errs.cardNumber = 'Required';
+      if (!form.expDate.trim()) errs.expDate = 'Required';
+    }
+    return errs;
+  };
 
   const nextStep = () => {
-    if (step === 0 && !form.email) return toast.error('Please enter your email');
-    if (step === 0 && !form.firstName) return toast.error('Please enter your first name');
-    if (step === 0 && !form.lastName) return toast.error('Please enter your last name');
-    if (step === 0 && !form.address) return toast.error('Please enter your address');
+    const errs = validateStep(step);
+    setErrors(errs);
+    if (Object.keys(errs).length) return;
     setStep((s) => Math.min(s + 1, 2));
   };
 
-  const prevStep = () => setStep((s) => Math.max(s - 1, 0));
+  const prevStep = () => {
+    setErrors({});
+    setStep((s) => Math.max(s - 1, 0));
+  };
 
-  const placeOrder = () => {
-    if (!form.cardNumber) return toast.error('Please enter card number');
-    if (!form.expDate) return toast.error('Please enter expiration date');
+  const placeOrder = async () => {
+    const errs = validateStep(2);
+    setErrors(errs);
+    if (Object.keys(errs).length) return;
+    setSubmitting(true);
+    await new Promise((r) => setTimeout(r, 1500));
     toast.success('Order placed successfully!');
     navigate('/shop');
   };
@@ -96,11 +122,11 @@ export const Checkout = () => {
                   <div className="space-y-6">
                     <h2 className="font-compressed text-3xl tracking-wider text-white mb-6">Contact & Address</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <InputField label="First Name" value={form.firstName} onChange={(v) => update('firstName', v)} />
-                      <InputField label="Last Name" value={form.lastName} onChange={(v) => update('lastName', v)} />
+                      <InputField label="First Name" value={form.firstName} onChange={(v) => update('firstName', v)} error={errors.firstName} />
+                      <InputField label="Last Name" value={form.lastName} onChange={(v) => update('lastName', v)} error={errors.lastName} />
                     </div>
-                    <InputField label="Email Address" type="email" value={form.email} onChange={(v) => update('email', v)} />
-                    <InputField label="Street Address" value={form.address} onChange={(v) => update('address', v)} />
+                    <InputField label="Email Address" type="email" value={form.email} onChange={(v) => update('email', v)} error={errors.email} />
+                    <InputField label="Street Address" value={form.address} onChange={(v) => update('address', v)} error={errors.address} />
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <InputField label="City" value={form.city} onChange={(v) => update('city', v)} />
                       <InputField label="ZIP Code" value={form.zipCode} onChange={(v) => update('zipCode', v)} />
@@ -148,10 +174,10 @@ export const Checkout = () => {
                       ))}
                     </div>
                     <InputField label="Card Number" placeholder="1234 5678 9012 3456" value={form.cardNumber}
-                      onChange={(v) => update('cardNumber', v)} />
+                      onChange={(v) => update('cardNumber', v)} error={errors.cardNumber} />
                     <div className="grid grid-cols-2 gap-4">
                       <InputField label="Expiration Date" placeholder="MM/YY" value={form.expDate}
-                        onChange={(v) => update('expDate', v)} />
+                        onChange={(v) => update('expDate', v)} error={errors.expDate} />
                       <InputField label="CVV" placeholder="123" value={form.cvv}
                         onChange={(v) => update('cvv', v)} />
                     </div>
@@ -171,8 +197,14 @@ export const Checkout = () => {
                 <span className="flex items-center gap-2"><FaArrowLeft className="text-xs" /> Back</span>
               </button>
               <button onClick={step === 2 ? placeOrder : nextStep}
+                disabled={submitting}
                 className="btn-primary flex items-center gap-3">
-                {step === 2 ? (
+                {submitting ? (
+                  <span className="flex items-center gap-3">
+                    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Processing...
+                  </span>
+                ) : step === 2 ? (
                   <>Place Order <FaLock className="text-xs" /></>
                 ) : (
                   <>Continue <FaArrowRight className="text-xs" /></>
@@ -228,7 +260,7 @@ export const Checkout = () => {
   );
 };
 
-function InputField({ label, value, onChange, type = 'text', placeholder = '' }) {
+function InputField({ label, value, onChange, type = 'text', placeholder = '', error }) {
   return (
     <div className="group">
       <label className="block font-body text-xs uppercase tracking-widest text-muted mb-2">{label}</label>
@@ -237,10 +269,11 @@ function InputField({ label, value, onChange, type = 'text', placeholder = '' })
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full bg-dark border border-dark-border px-4 py-3.5 text-white text-sm
-                   placeholder:text-muted/30 focus:outline-none focus:border-accent transition-all duration-300
-                   group-hover:border-muted/30"
+        className={`w-full bg-dark border px-4 py-3.5 text-white text-sm
+                   placeholder:text-muted/50 transition-all duration-300
+                   ${error ? 'border-accent' : 'border-dark-border'}`}
       />
+      {error && <p className="text-accent text-xs mt-1 font-body">{error}</p>}
     </div>
   );
 }

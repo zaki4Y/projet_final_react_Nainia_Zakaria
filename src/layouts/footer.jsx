@@ -145,7 +145,7 @@ export const Footerr = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your email address"
                 className="flex-1 bg-dark border border-dark-border px-5 py-3.5 text-white text-sm
-                           placeholder:text-muted/50 focus:outline-none focus:border-accent transition-colors"
+                           placeholder:text-muted/60 transition-colors"
               />
               <motion.button
                 type="submit"
@@ -165,10 +165,10 @@ export const Footerr = () => {
 
       <div className="border-t border-dark-border">
         <div className="section-padding py-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-muted/60 text-xs">
+          <p className="text-muted text-xs">
             &copy; {new Date().getFullYear()} ZSHOP. All rights reserved.
           </p>
-          <p className="text-muted/60 text-xs">
+          <p className="text-muted text-xs">
             Designed with purpose
           </p>
         </div>

@@ -103,16 +103,26 @@ export const FirstSection = () => {
     },
   ];
 
+  const [paused, setPaused] = useState(false);
+
   useEffect(() => {
+    if (paused) return;
     const interval = setInterval(() => {
       setActiveSlide((prev) => (prev + 1) % heroSlides.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [paused]);
 
   return (
     <div className="bg-dark">
-      <section ref={heroRef} className="relative h-screen overflow-hidden">
+      <section
+        ref={heroRef}
+        className="relative h-screen overflow-hidden"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        onFocus={() => setPaused(true)}
+        onBlur={() => setPaused(false)}
+      >
         <AnimatePresence mode="wait">
           <motion.div
             key={activeSlide}
@@ -210,6 +220,7 @@ export const FirstSection = () => {
                   <img
                     src={item.img}
                     alt={item.label}
+                    loading="lazy"
                     className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-1"
                   />
                 </div>
@@ -275,6 +286,7 @@ export const FirstSection = () => {
                     <img
                       src={product.img}
                       alt={product.title}
+                      loading="lazy"
                       className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-dark/0 group-hover:bg-dark/20 transition-all duration-500" />
@@ -304,7 +316,7 @@ export const FirstSection = () => {
             className="relative"
           >
             <div className="relative overflow-hidden group">
-              <img src={img18} alt="The Beauty Lookbook collection" className="w-full transition-all duration-700 group-hover:scale-105" />
+              <img src={img18} alt="The Beauty Lookbook collection" loading="lazy" className="w-full transition-all duration-700 group-hover:scale-105" />
               <div className="absolute inset-0 bg-gradient-to-t from-dark/60 via-transparent to-transparent" />
             </div>
           </motion.div>
@@ -386,6 +398,7 @@ export const FirstSection = () => {
                   <img
                     src={post.img}
                     alt={post.title}
+                    loading="lazy"
                     className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-dark/0 group-hover:bg-dark/20 transition-all duration-500" />

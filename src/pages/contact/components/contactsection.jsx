@@ -8,16 +8,34 @@ export const Contactsection = () => {
   const [formData, setFormData] = useState({
     name: '', email: '', phone: '', subject: '', message: '',
   });
+  const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    if (errors[e.target.name]) setErrors((prev) => ({ ...prev, [e.target.name]: '' }));
   };
 
-  const handleSubmit = (e) => {
+  const validate = () => {
+    const errs = {};
+    if (!formData.name.trim()) errs.name = 'Name is required';
+    if (!formData.email.trim()) errs.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) errs.email = 'Enter a valid email';
+    if (!formData.subject.trim()) errs.subject = 'Subject is required';
+    if (!formData.message.trim()) errs.message = 'Message is required';
+    return errs;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    const errs = validate();
+    setErrors(errs);
+    if (Object.keys(errs).length) return;
+    setSubmitting(true);
+    await new Promise((r) => setTimeout(r, 1200));
     toast.success('Message sent successfully! We will contact you soon.');
     setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+    setSubmitting(false);
   };
 
   const contactInfo = [
@@ -74,7 +92,7 @@ export const Contactsection = () => {
                   className="bg-dark-card border border-dark-border p-5 group hover:border-accent/30 transition-all duration-300"
                 >
                   <info.icon className="text-xl text-accent mb-3 group-hover:scale-110 transition-transform duration-300" />
-                  <h3 className="font-body text-xs uppercase tracking-widest text-muted mb-1">{info.title}</h3>
+                  <h2 className="font-body text-xs uppercase tracking-widest text-muted mb-1">{info.title}</h2>
                   <p className="font-body text-sm text-white">{info.content}</p>
                 </motion.a>
               ))}
@@ -83,7 +101,7 @@ export const Contactsection = () => {
             <div className="bg-dark-card border border-dark-border p-6">
               <div className="flex items-center gap-3 mb-4">
                 <HiClock className="text-xl text-accent" />
-                <h3 className="font-body text-sm uppercase tracking-widest text-white">Business Hours</h3>
+                <h2 className="font-body text-sm uppercase tracking-widest text-white">Business Hours</h2>
               </div>
               <div className="space-y-2">
                 {businessHours.map((schedule, i) => (
@@ -128,14 +146,14 @@ export const Contactsection = () => {
                 Have a question or feedback? We'd love to hear from you.
               </p>
 
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form onSubmit={handleSubmit} className="space-y-5" noValidate>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <InputField label="Your Name" name="name" value={formData.name} onChange={handleChange} required />
-                  <InputField label="Email Address" name="email" type="email" value={formData.email} onChange={handleChange} required />
+                  <InputField label="Your Name" name="name" value={formData.name} onChange={handleChange} error={errors.name} required />
+                  <InputField label="Email Address" name="email" type="email" value={formData.email} onChange={handleChange} error={errors.email} required />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <InputField label="Phone Number" name="phone" type="tel" value={formData.phone} onChange={handleChange} placeholder="123-456-7890" />
-                  <InputField label="Subject" name="subject" value={formData.subject} onChange={handleChange} required />
+                  <InputField label="Subject" name="subject" value={formData.subject} onChange={handleChange} error={errors.subject} required />
                 </div>
                 <div className="group">
                   <label className="block font-body text-xs uppercase tracking-widest text-muted mb-2">Message</label>
@@ -145,19 +163,31 @@ export const Contactsection = () => {
                     onChange={handleChange}
                     rows={5}
                     required
-                    className="w-full bg-dark border border-dark-border px-4 py-3.5 text-white text-sm
-                               placeholder:text-muted/30 focus:outline-none focus:border-accent transition-all duration-300 resize-none"
+                    className={`w-full bg-dark border px-4 py-3.5 text-white text-sm
+                               placeholder:text-muted/50 transition-all duration-300 resize-none
+                               ${errors.message ? 'border-accent' : 'border-dark-border focus-visible:border-accent'}`}
                   />
+                  {errors.message && <p className="text-accent text-xs mt-1 font-body">{errors.message}</p>}
                 </div>
 
                 <motion.button
                   type="submit"
+                  disabled={submitting}
                   className="btn-primary w-full flex items-center justify-center gap-3"
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.98 }}
+                  whileHover={submitting ? {} : { scale: 1.01 }}
+                  whileTap={submitting ? {} : { scale: 0.98 }}
                 >
-                  Send Message
-                  <FaPaperPlane className="text-xs" />
+                  {submitting ? (
+                    <span className="flex items-center gap-3">
+                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Sending...
+                    </span>
+                  ) : (
+                    <>
+                      Send Message
+                      <FaPaperPlane className="text-xs" />
+                    </>
+                  )}
                 </motion.button>
               </form>
             </div>
@@ -168,7 +198,7 @@ export const Contactsection = () => {
   );
 };
 
-function InputField({ label, name, type = 'text', value, onChange, required = false, placeholder = '' }) {
+function InputField({ label, name, type = 'text', value, onChange, error, required = false, placeholder = '' }) {
   return (
     <div className="group">
       <label className="block font-body text-xs uppercase tracking-widest text-muted mb-2">{label}</label>
@@ -179,10 +209,11 @@ function InputField({ label, name, type = 'text', value, onChange, required = fa
         onChange={onChange}
         required={required}
         placeholder={placeholder}
-        className="w-full bg-dark border border-dark-border px-4 py-3.5 text-white text-sm
-                   placeholder:text-muted/30 focus:outline-none focus:border-accent transition-all duration-300
-                   group-hover:border-muted/30"
+        className={`w-full bg-dark border px-4 py-3.5 text-white text-sm
+                   placeholder:text-muted/50 transition-all duration-300
+                   ${error ? 'border-accent' : 'border-dark-border'}`}
       />
+      {error && <p className="text-accent text-xs mt-1 font-body">{error}</p>}
     </div>
   );
 }

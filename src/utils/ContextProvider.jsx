@@ -66,6 +66,27 @@ export const MyProvider = ({ children }) => {
         localStorage.setItem('cart', JSON.stringify(cart));
     }, [cart]);
 
+    const [wishlist, setWishlist] = useState(() => {
+        const saved = localStorage.getItem('wishlist');
+        return saved ? JSON.parse(saved) : [];
+    });
+
+    useEffect(() => {
+        localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    }, [wishlist]);
+
+    const toggleWishlist = (product) => {
+        setWishlist(prev => {
+            const exists = prev.find(item => item.id === product.id);
+            if (exists) {
+                return prev.filter(item => item.id !== product.id);
+            }
+            return [...prev, { id: product.id, title: product.title, price: product.price, images: product.images }];
+        });
+    };
+
+    const isInWishlist = (id) => wishlist.some(item => item.id === id);
+
     const [darkMode, setDarkMode] = useState(() => {
         // Check if user has a theme preference in localStorage
         const savedTheme = localStorage.getItem('theme');
@@ -132,7 +153,10 @@ export const MyProvider = ({ children }) => {
             removeFromCart,
             updateQuantity,
             darkMode,
-            toggleTheme
+            toggleTheme,
+            wishlist,
+            toggleWishlist,
+            isInWishlist
         }}>
             {children}
         </MyContext.Provider>

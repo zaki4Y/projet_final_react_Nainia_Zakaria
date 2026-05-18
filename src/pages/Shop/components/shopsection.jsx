@@ -79,6 +79,7 @@ function ProductCard({ product, index }) {
           <img
             src={product.images}
             alt={product.title}
+            loading="lazy"
             className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-dark/80 via-dark/10 to-transparent
@@ -110,7 +111,13 @@ export const Shopsection = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedPriceRange, setSelectedPriceRange] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [filteredProducts, setFilteredProducts] = useState(productsData);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchQuery), 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   useEffect(() => {
     let filtered = [...productsData];
@@ -121,18 +128,19 @@ export const Shopsection = () => {
       const [min, max] = selectedPriceRange.split('-').map(Number);
       filtered = filtered.filter((item) => item.price >= min && item.price <= max);
     }
-    if (searchQuery) {
+    if (debouncedSearch) {
       filtered = filtered.filter((item) =>
-        item.title.toLowerCase().includes(searchQuery.toLowerCase())
+        item.title.toLowerCase().includes(debouncedSearch.toLowerCase())
       );
     }
     setFilteredProducts(filtered);
-  }, [selectedCategory, selectedPriceRange, searchQuery]);
+  }, [selectedCategory, selectedPriceRange, debouncedSearch]);
 
   const clearAll = () => {
     setSelectedCategory('all');
     setSelectedPriceRange('all');
     setSearchQuery('');
+    setDebouncedSearch('');
   };
 
   const hasFilters = selectedCategory !== 'all' || selectedPriceRange !== 'all' || searchQuery;
@@ -202,7 +210,7 @@ export const Shopsection = () => {
 
                 <div className="border-t border-dark-border pt-6">
                   <div className="relative">
-                    <HiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/50 text-sm" />
+                    <HiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-muted text-sm" />
                     <input
                       type="text"
                       value={searchQuery}
@@ -251,7 +259,7 @@ export const Shopsection = () => {
                   className="text-center py-20"
                 >
                   <p className="font-display italic text-2xl text-muted mb-4">No products found</p>
-                  <p className="font-body text-sm text-muted/60 mb-6">Try adjusting your filters</p>
+                  <p className="font-body text-sm text-muted mb-6">Try adjusting your filters</p>
                   <button onClick={clearAll} className="btn-primary">Reset Filters</button>
                 </motion.div>
               ) : (
